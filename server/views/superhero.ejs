@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= hero.name %> | Superhero Database</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-md-4">
+        <img src="<%= hero.image.url %>" class="img-fluid rounded" alt="<%= hero.name %>" onerror="this.src='/images/no-image.png'">
+      </div>
+      <div class="col-md-8">
+        <h1><%= hero.name %></h1>
+        <h4><%= hero.biography.fullName || 'Unknown' %></h4>
+        <p><strong>Publisher:</strong> <%= hero.biography.publisher || 'Unknown' %></p>
+        
+        <div class="card mb-3">
+          <div class="card-header">Power Stats</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Intelligence:</strong> 
+                  <div class="progress">
+                    <div class="progress-bar bg-primary" role="progressbar" style="width: <%= hero.powerstats.intelligence %>%" aria-valuenow="<%= hero.powerstats.intelligence %>" aria-valuemin="0" aria-valuemax="100"><%= hero.powerstats.intelligence %></div>
+                  </div>
+                </p>
+                <p><strong>Strength:</strong> 
+                  <div class="progress">
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: <%= hero.powerstats.strength %>%" aria-valuenow="<%= hero.powerstats.strength %>" aria-valuemin="0" aria-valuemax="100"><%= hero.powerstats.strength %></div>
+                  </div>
+                </p>
+                <p><strong>Speed:</strong> 
+                  <div class="progress">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: <%= hero.powerstats.speed %>%" aria-valuenow="<%= hero.powerstats.speed %>" aria-valuemin="0" aria-valuemax="100"><%= hero.powerstats.speed %></div>
+                  </div>
+                </p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Durability:</strong> 
+                  <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: <%= hero.powerstats.durability %>%" aria-valuenow="<%= hero.powerstats.durability %>" aria-valuemin="0" aria-valuemax="100"><%= hero.powerstats.durability %></div>
+                  </div>
+                </p>
+                <p><strong>Power:</strong> 
+                  <div class="progress">
+                    <div class="progress-bar bg-info" role="progressbar" style="width: <%= hero.powerstats.power %>%" aria-valuenow="<%= hero.powerstats.power %>" aria-valuemin="0" aria-valuemax="100"><%= hero.powerstats.power %></div>
+                  </div>
+                </p>
+                <p><strong>Combat:</strong> 
+                  <div class="progress">
+                    <div class="progress-bar bg-dark" role="progressbar" style="width: <%= hero.powerstats.combat %>%" aria-valuenow="<%= hero.powerstats.combat %>" aria-valuemin="0" aria-valuemax="100"><%= hero.powerstats.combat %></div>
+                  </div>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-md-6">
+        <div class="card mb-3">
+          <div class="card-header">Biography</div>
+          <div class="card-body">
+            <p><strong>First Appearance:</strong> <%= hero.biography.firstAppearance || 'Unknown' %></p>
+            <p><strong>Alignment:</strong> <%= hero.biography.alignment || 'Unknown' %></p>
+            <p><strong>Place of Birth:</strong> <%= hero.biography.placeOfBirth || 'Unknown' %></p>
+            <% if(hero.biography.aliases && hero.biography.aliases.length > 0) { %>
+              <p><strong>Aliases:</strong> <%= hero.biography.aliases.join(', ') %></p>
+            <% } %>
+          </div>
+        </div>
+        
+        <div class="card mb-3">
+          <div class="card-header">Appearance</div>
+          <div class="card-body">
+            <p><strong>Gender:</strong> <%= hero.appearance.gender || 'Unknown' %></p>
+            <p><strong>Race:</strong> <%= hero.appearance.race || 'Unknown' %></p>
+            <p><strong>Height:</strong> <%= hero.appearance.height ? hero.appearance.height[1] : 'Unknown' %></p>
+            <p><strong>Weight:</strong> <%= hero.appearance.weight ? hero.appearance.weight[1] : 'Unknown' %></p>
+            <p><strong>Eye Color:</strong> <%= hero.appearance.eyeColor || 'Unknown' %></p>
+            <p><strong>Hair Color:</strong> <%= hero.appearance.hairColor || 'Unknown' %></p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6">
+        <div class="card mb-3">
+          <div class="card-header">Work</div>
+          <div class="card-body">
+            <p><strong>Occupation:</strong> <%= hero.work.occupation || 'Unknown' %></p>
+            <p><strong>Base:</strong> <%= hero.work.base || 'Unknown' %></p>
+          </div>
+        </div>
+        
+        <div class="card mb-3">
+          <div class="card-header">Connections</div>
+          <div class="card-body">
+            <p><strong>Group Affiliation:</strong> <%= hero.connections.groupAffiliation || 'Unknown' %></p>
+            <p><strong>Relatives:</strong> <%= hero.connections.relatives || 'Unknown' %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <a href="/" class="btn btn-primary mb-4">Back to Heroes</a>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
