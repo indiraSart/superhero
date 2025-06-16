@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Superhero = require('../models/Superhero');
+const Superhero = require('../models/superhero.js');
 
 // Middleware to check if user is authenticated
 const isAuthenticated = (req, res, next) => {

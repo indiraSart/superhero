@@ -1,7 +1,7 @@
 require('dotenv').config();
 const axios = require('axios');
 const mongoose = require('mongoose');
-const Superhero = require('../models/Superhero');
+const Superhero = require('../models/superhero.js');
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/superhero', {
