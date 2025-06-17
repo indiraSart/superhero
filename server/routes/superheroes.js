@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Superhero = require('../models/superhero.js');
+const Superhero = require('../models/superhero'); // Fixed: removed .js extension
 
 // Middleware to check if user is authenticated
 const isAuthenticated = (req, res, next) => {

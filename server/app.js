@@ -7,27 +7,57 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/superhero', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('Connected to MongoDB'))
-.catch(err => console.error('MongoDB connection error:', err));
+// Improved MongoDB connection with retry logic
+const connectToDatabase = async (retries = 5) => {
+  try {
+    console.log('Attempting to connect to MongoDB...');
+    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/superhero', {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log('Successfully connected to MongoDB');
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+    
+    if (retries > 0) {
+      console.log(`Retrying connection in 5 seconds... (${retries} attempts left)`);
+      setTimeout(() => connectToDatabase(retries - 1), 5000);
+    } else {
+      console.error('Failed to connect to MongoDB after multiple attempts');
+      process.exit(1); // Exit with error
+    }
+  }
+};
 
-// Middleware
+// Connect to MongoDB
+connectToDatabase();
+
+// Request logger middleware for debugging
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
+
+// Body parser setup - improved
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Static files
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+
+// View engine setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Session setup
+// Session setup with explicit error handling
 app.use(session({
   secret: process.env.SESSION_SECRET || 'supersecretkey123',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: process.env.NODE_ENV === 'production', maxAge: 3600000 } // 1 hour
+  cookie: { 
+    secure: process.env.NODE_ENV === 'production', 
+    maxAge: 3600000 // 1 hour
+  }
 }));
 
 // Make user available in all templates
@@ -43,8 +73,27 @@ const userRoutes = require('./routes/users');
 app.use('/', heroRoutes);
 app.use('/users', userRoutes);
 
+// Catch-all error handler
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  
+  // Render the error page with details
+  res.status(500).render('error', {
+    error: 'Something went wrong',
+    message: process.env.NODE_ENV === 'development' ? err.message : 'Please try again later',
+    returnUrl: '/',
+    user: req.session && req.session.user ? req.session.user : null
+  });
+});
+
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+  // Consider graceful shutdown here if needed
 });
