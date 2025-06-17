@@ -17,6 +17,51 @@ if (!token) {
   process.exit(1);
 }
 
+// Define IDs for famous superheroes
+// These IDs are based on the SuperHero API's numbering system
+const famousHeroIds = [
+  // DC Comics
+  70,   // Batman
+  644,  // Superman
+  720,  // Wonder Woman
+  263,  // Flash
+  30,   // Aquaman
+  298,  // Green Lantern
+  561,  // Shazam
+  309,  // Harley Quinn
+  370,  // Joker
+  405,  // Lex Luthor
+  
+  // Marvel
+  332,  // Iron Man
+  149,  // Captain America
+  659,  // Thor
+  620,  // Spider-Man
+  313,  // Hulk
+  107,  // Black Widow
+  106,  // Black Panther
+  717,  // Wolverine
+  157,  // Captain Marvel
+  226,  // Doctor Strange
+  165,  // Deadpool
+  303,  // Groot
+  303,  // Thanos
+  579,  // Silver Surfer
+  638,  // Storm
+  
+  // Additional popular heroes
+  213,  // Daredevil
+  423,  // Magneto
+  566,  // Rogue
+  541,  // Professor X
+  275,  // Ghost Rider
+  687,  // Vision
+  598,  // Superman Prime
+  655,  // Thanos
+  729,  // X-Man
+  732   // Zatanna
+];
+
 const fetchHero = async (id) => {
   try {
     const response = await axios.get(`https://superheroapi.com/api/${token}/${id}`);
@@ -28,12 +73,13 @@ const fetchHero = async (id) => {
 };
 
 const importHeroes = async () => {
-  console.log('Starting to import superheroes...');
-  const totalHeroes = 30; // We'll try to fetch 30 to ensure we get at least 20 valid ones
+  console.log('Starting to import famous superheroes...');
   const heroes = [];
 
-  for (let i = 1; i <= totalHeroes; i++) {
-    const hero = await fetchHero(i);
+  for (const id of famousHeroIds) {
+    if (heroes.length >= 30) break; // Stop once we have 30 heroes
+    
+    const hero = await fetchHero(id);
     if (hero && hero.response === 'success') {
       const formattedHero = {
         id: hero.id,
@@ -76,9 +122,9 @@ const importHeroes = async () => {
         }
       };
       heroes.push(formattedHero);
-      console.log(`Fetched hero ${i}: ${hero.name}`);
+      console.log(`Fetched famous hero: ${hero.name} (${heroes.length} of 30)`);
     } else {
-      console.log(`Skipping hero ${i}: Invalid data`);
+      console.log(`Skipping hero with ID ${id}: Invalid data`);
     }
   }
 
@@ -86,7 +132,7 @@ const importHeroes = async () => {
   try {
     await Superhero.deleteMany({}); // Clear existing data
     await Superhero.insertMany(heroes);
-    console.log(`Successfully imported ${heroes.length} superheroes!`);
+    console.log(`Successfully imported ${heroes.length} famous superheroes!`);
   } catch (error) {
     console.error('Error saving heroes to database:', error);
   }

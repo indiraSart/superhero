@@ -10,7 +10,7 @@ const isAuthenticated = (req, res, next) => {
   res.redirect('/users/login');
 };
 
-// GET / → homepage with 20 superheroes
+// GET / → homepage with 30 superheroes
 router.get('/', async (req, res) => {
   try {
     const search = req.query.search || '';
@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
     }
     
     console.log('Searching for heroes with query:', query);
-    const heroes = await Superhero.find(query).limit(20);
+    const heroes = await Superhero.find(query).limit(30);
     console.log(`Found ${heroes.length} heroes`);
     
     res.render('landing', { heroes, search });
