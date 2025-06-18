@@ -1,4 +1,4 @@
-require('dotenv').config(); // Load .env from root directory
+require('dotenv').config(); 
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -24,7 +24,7 @@ const connectToDatabase = async (retries = 5) => {
       setTimeout(() => connectToDatabase(retries - 1), 5000);
     } else {
       console.error('Failed to connect to MongoDB after multiple attempts');
-      process.exit(1); // Exit with error
+      process.exit(1); 
     }
   }
 };
@@ -32,7 +32,6 @@ const connectToDatabase = async (retries = 5) => {
 // Connect to MongoDB
 connectToDatabase();
 
-// Request logger middleware for debugging
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`);
   next();
@@ -69,9 +68,11 @@ app.use((req, res, next) => {
 // Routes
 const heroRoutes = require('./routes/superheroes');
 const userRoutes = require('./routes/users');
+const favoriteRoutes = require('./routes/favorites');
 
 app.use('/', heroRoutes);
 app.use('/users', userRoutes);
+app.use('/favorites', favoriteRoutes);
 
 // Catch-all error handler
 app.use((err, req, res, next) => {
@@ -95,5 +96,4 @@ app.listen(PORT, () => {
 // Handle uncaught exceptions
 process.on('uncaughtException', (error) => {
   console.error('Uncaught Exception:', error);
-  // Consider graceful shutdown here if needed
 });

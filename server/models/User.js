@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
     default: ''
   },
   favoriteHero: {
-    type: String, // Store just the hero ID as a string
+    type: String, 
     default: null
   },
   createdAt: {
@@ -41,7 +41,6 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-// Hash password before saving - with better error handling
 userSchema.pre('save', async function(next) {
   try {
     if (!this.isModified('password')) {

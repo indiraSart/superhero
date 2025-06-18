@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
-const Superhero = require('../models/superhero'); // Fixed: removed .js extension
+const Superhero = require('../models/superhero');
+const Favorite = require('../models/Favorite');
 
-// Middleware to check if user is authenticated
+//to check if user is authenticated
 const isAuthenticated = (req, res, next) => {
   if (req.session.user) {
     return next();
@@ -43,7 +44,6 @@ router.post('/register', async (req, res) => {
     console.log('Creating new user');
     const user = new User({ username, email, password });
     
-    // Save with explicit try/catch to catch validation errors
     try {
       await user.save();
       console.log('User registered successfully:', username);
@@ -104,7 +104,6 @@ router.post('/login', async (req, res) => {
       
       console.log('Session user set:', req.session.user);
       
-      // Save the session explicitly before redirection
       return req.session.save(err => {
         if (err) {
           console.error('Session save error:', err);
@@ -123,7 +122,6 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Debug endpoint to verify router is working
 router.get('/test', (req, res) => {
   res.send('User routes are working!');
 });
@@ -146,8 +144,31 @@ router.get('/profile', isAuthenticated, async (req, res) => {
       user: userData,
       heroes: [],
       favoriteHero: null,
-      message: req.query.message
+      message: req.query.message,
+      userFavorites: []
     };
+    
+    // Get user's favorites with superhero details
+    try {
+      const favorites = await Favorite.find({ userId: userData._id }).sort('-createdAt');
+      
+      if (favorites.length > 0) {
+        // Get all superhero details at once
+        const superheroIds = favorites.map(fav => fav.superheroId);
+        const heroes = await Superhero.find({ id: { $in: superheroIds } });
+        
+        // Map favorites to include hero details
+        templateData.userFavorites = favorites.map(fav => {
+          const hero = heroes.find(h => h.id === fav.superheroId);
+          return {
+            favorite: fav,
+            superhero: hero
+          };
+        }).filter(item => item.superhero); // Filter out any missing heroes
+      }
+    } catch (favError) {
+      console.error('Error loading user favorites:', favError);
+    }
     
     // Try to get heroes, but don't fail if it doesn't work
     try {

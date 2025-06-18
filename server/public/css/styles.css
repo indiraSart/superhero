@@ -8,6 +8,8 @@
   --hero-purple: #9b59b6;
   --dark-bg: #1a1a2e;
   --light-bg: #f1faee;
+  --favorite-red: #ff4757;
+  --favorite-pink: #ff6b81;
 }
 
 body {
@@ -221,6 +223,126 @@ a:hover {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   padding: 10px 25px;
+}
+
+/* Alert container for favorite messages */
+.alert-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  max-width: 300px;
+}
+
+.message-alert {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+/* Favorites section */
+.favorites-section {
+  background: rgba(21, 32, 43, 0.6);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.favorites-section h2 {
+  font-weight: 700;
+  color: var(--accent-color);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 1.8rem;
+}
+
+.favorite-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: var(--favorite-red);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+
+.favorite-count {
+  margin-left: 5px;
+}
+
+.favorite-card {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.favorite-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+.favorite-description {
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #e0e0e0;
+}
+
+.favorite-description-text {
+  font-style: italic;
+  color: #adb5bd;
+  margin-top: 10px;
+}
+
+.favorite-hero-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.favorite-card .card-img-top {
+  height: 220px;
+  object-fit: cover;
+}
+
+/* Top favorites carousel */
+.top-favorites-carousel {
+  margin-bottom: 30px;
+}
+
+.carousel-item {
+  padding: 20px;
+}
+
+/* Animation for favorite button */
+.btn-favorite {
+  transition: all 0.3s;
+}
+
+.btn-favorite:hover {
+  transform: scale(1.05);
+}
+
+.btn-favorite:active {
+  transform: scale(0.95);
+}
+
+@keyframes heartbeat {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.1); }
+  50% { transform: scale(1); }
+  75% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.heartbeat {
+  animation: heartbeat 1s ease-in-out;
 }
 
 /* Animations */

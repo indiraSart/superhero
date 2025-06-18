@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Superhero Database</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
@@ -20,10 +21,67 @@
       </div>
     </form>
 
+    <!-- Top favorites section -->
+    <% if (typeof topFavorites !== 'undefined' && topFavorites.length > 0) { %>
+      <div class="favorites-section mb-5">
+        <h2>Top 10 Fan Favorites</h2>
+        
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-5 g-4">
+          <% topFavorites.forEach(item => { %>
+            <% if (item.superhero) { %>
+              <div class="col">
+                <div class="card h-100 favorite-card">
+                  <div class="favorite-badge">
+                    <i class="fas fa-heart"></i>
+                    <span class="favorite-count favorite-count-<%= item.superhero.id %>"><%= item.count %></span>
+                  </div>
+                  <img src="<%= item.superhero.image.url %>" class="card-img-top" alt="<%= item.superhero.name %>" onerror="this.src='/images/no-image.png'">
+                  <div class="card-body">
+                    <h5 class="card-title"><%= item.superhero.name %></h5>
+                    <p class="card-text"><small><%= item.superhero.biography.fullName || 'Unknown' %></small></p>
+                    <div class="d-flex justify-content-between">
+                      <span class="badge bg-primary">STR: <%= item.superhero.powerstats.strength %></span>
+                      <span class="badge bg-success">INT: <%= item.superhero.powerstats.intelligence %></span>
+                    </div>
+                    <div class="d-flex justify-content-between mt-2">
+                      <a href="/superhero/<%= item.superhero.id %>" class="btn btn-primary btn-sm">View Details</a>
+                      <% if (typeof user !== 'undefined' && user) { %>
+                        <% if (typeof userFavorites !== 'undefined' && userFavorites.includes(item.superhero.id)) { %>
+                          <button class="btn btn-sm btn-danger remove-favorite-btn" data-superhero-id="<%= item.superhero.id %>">
+                            <i class="fas fa-heart"></i>
+                          </button>
+                        <% } else { %>
+                          <button class="btn btn-sm btn-outline-danger add-favorite-btn" data-superhero-id="<%= item.superhero.id %>">
+                            <i class="far fa-heart"></i>
+                          </button>
+                        <% } %>
+                      <% } %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% } %>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
+
+    <!-- All heroes section -->
+    <h2 class="mb-3">All Heroes</h2>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
       <% heroes.forEach(hero => { %>
         <div class="col">
           <div class="card h-100">
+            <% if (typeof topFavorites !== 'undefined') { %>
+              <% const topFav = topFavorites.find(item => item.superhero && item.superhero.id === hero.id) %>
+              <% if (topFav) { %>
+                <div class="favorite-badge">
+                  <i class="fas fa-heart"></i>
+                  <span class="favorite-count favorite-count-<%= hero.id %>"><%= topFav.count %></span>
+                </div>
+              <% } %>
+            <% } %>
+            
             <img src="<%= hero.image.url %>" class="card-img-top" alt="<%= hero.name %>" onerror="this.src='/images/no-image.png'">
             <div class="card-body">
               <h5 class="card-title"><%= hero.name %></h5>
@@ -33,7 +91,20 @@
                 <span class="badge bg-success">INT: <%= hero.powerstats.intelligence %></span>
                 <span class="badge bg-danger">PWR: <%= hero.powerstats.power %></span>
               </div>
-              <a href="/superhero/<%= hero.id %>" class="btn btn-primary btn-sm mt-2">View Details</a>
+              <div class="d-flex justify-content-between mt-2">
+                <a href="/superhero/<%= hero.id %>" class="btn btn-primary btn-sm">View Details</a>
+                <% if (typeof user !== 'undefined' && user) { %>
+                  <% if (typeof userFavorites !== 'undefined' && userFavorites.includes(hero.id)) { %>
+                    <button class="btn btn-sm btn-danger remove-favorite-btn" data-superhero-id="<%= hero.id %>">
+                      <i class="fas fa-heart"></i>
+                    </button>
+                  <% } else { %>
+                    <button class="btn btn-sm btn-outline-danger add-favorite-btn" data-superhero-id="<%= hero.id %>">
+                      <i class="far fa-heart"></i>
+                    </button>
+                  <% } %>
+                <% } %>
+              </div>
             </div>
           </div>
         </div>
@@ -42,5 +113,6 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/favorites.js"></script>
 </body>
 </html>

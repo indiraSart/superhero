@@ -1,7 +1,7 @@
 require('dotenv').config();
 const axios = require('axios');
 const mongoose = require('mongoose');
-const Superhero = require('../models/superhero'); // Fixed: removed .js extension
+const Superhero = require('../models/superhero'); 
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/superhero', {
@@ -17,8 +17,6 @@ if (!token) {
   process.exit(1);
 }
 
-// Define IDs for famous superheroes
-// These IDs are based on the SuperHero API's numbering system
 const famousHeroIds = [
   // DC Comics
   70,   // Batman
@@ -77,7 +75,7 @@ const importHeroes = async () => {
   const heroes = [];
 
   for (const id of famousHeroIds) {
-    if (heroes.length >= 30) break; // Stop once we have 30 heroes
+    if (heroes.length >= 30) break; 
     
     const hero = await fetchHero(id);
     if (hero && hero.response === 'success') {
@@ -130,7 +128,7 @@ const importHeroes = async () => {
 
   // Save heroes to database
   try {
-    await Superhero.deleteMany({}); // Clear existing data
+    await Superhero.deleteMany({}); 
     await Superhero.insertMany(heroes);
     console.log(`Successfully imported ${heroes.length} famous superheroes!`);
   } catch (error) {
